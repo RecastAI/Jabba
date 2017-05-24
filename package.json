@@ -1,6 +1,6 @@
 {
   "name": "jabba",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "license": "MIT",
   "author": "Nathan Grasset <nathan.grasset@recast.ai> (https://recast.ai)",
