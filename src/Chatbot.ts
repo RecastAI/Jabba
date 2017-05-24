@@ -98,6 +98,10 @@ export default class Chatbot {
     );
   }
 
+  public isMongoEnabled(): boolean {
+    return this.config.mongo && this.config.mongo.enabled ? true : false;
+  }
+
   private onMessage(message: recastai.Message): Promise<any> {
     const ctx: IChatbotContext = { message, recastSdk: this.recastSdk, config: this.config };
     let currentMiddlewareIndex: number = 0;
@@ -112,7 +116,7 @@ export default class Chatbot {
       }
     };
 
-    if (this.mongoEnabled === true) {
+    if (this.isMongoEnabled() === true) {
       return Session.findOrCreateById(message.conversationId)
         .then((session: Session) => {
           ctx.session = session;
@@ -121,4 +125,5 @@ export default class Chatbot {
     }
     return execNextMiddleware();
   }
+
 }

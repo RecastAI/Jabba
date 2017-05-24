@@ -5,6 +5,7 @@ export interface ISessionModel {
   consecutiveNotUnderstand: number;
   createdAt: Date;
   updatedAt: Date;
+  memory: object;
 }
 
 export interface ISessionDocument extends ISessionModel, mongoose.Document { }
@@ -26,6 +27,10 @@ const sessionSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     required: false,
+  },
+  memory: {
+    type: Object,
+    default: {},
   },
 });
 
@@ -50,6 +55,7 @@ export class Session {
       consecutiveNotUnderstand: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
+      memory: {},
     };
 
     return SessionModel.create(instance)
@@ -86,6 +92,10 @@ export class Session {
     return this.document.conversationId;
   }
 
+  get memory(): object {
+    return this.document.memory;
+  }
+
   get consecutiveNotUnderstand(): number {
     return this.document.consecutiveNotUnderstand;
   }
@@ -95,7 +105,14 @@ export class Session {
   }
 
   public save(): Promise<Session> {
+    this.document.markModified('memory');
     return this.document.save()
       .then(() => this);
+  }
+
+  public reset(): Promise<Session> {
+    this.document.consecutiveNotUnderstand = 0;
+    this.document.memory = {};
+    return this.save();
   }
 }
