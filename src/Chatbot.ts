@@ -2,6 +2,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as recastai from 'recastai';
+import Client from 'recastai';
 
 import { Session } from './Session.model';
 
@@ -53,13 +54,14 @@ export default class Chatbot {
 
     if (config.connectToken) {
       this.recastSdk = {
-        connect: new recastai.Connect(config.connectToken, config.language),
-        request: new recastai.Request(config.requestToken, config.language),
+        connect: new Client(config.connectToken, config.language).connect,
+        request: new Client(config.requestToken, config.language).request,
       };
     } else {
+      const instance = new Client(config.requestToken, config.language);
       this.recastSdk = {
-        connect: new recastai.Connect(config.requestToken, config.language),
-        request: new recastai.Request(config.requestToken, config.language),
+        connect: instance.connect,
+        request: instance.request,
       };
     }
 
