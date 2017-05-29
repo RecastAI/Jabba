@@ -17,6 +17,7 @@ export class QuickReplies {
 
   constructor(title: string) {
     this.title = title;
+    this.buttons = [];
   }
 
   public setTitle(title: string): QuickReplies {
