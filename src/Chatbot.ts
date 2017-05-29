@@ -77,8 +77,9 @@ export default class Chatbot {
     }
   }
 
-  public listen(port: number): void {
+  public listen(port: number): Chatbot {
     this.httpServer.listen(port);
+    return this;
   }
 
   public use(middleware: ChatbotMiddleware): Chatbot {
@@ -102,6 +103,38 @@ export default class Chatbot {
 
   public isMongoEnabled(): boolean {
     return this.config.mongo && this.config.mongo.enabled ? true : false;
+  }
+
+  public async botHostingEntrypoint(
+    body: { message: string, text: string },
+    response: object,
+    callback: (err: any, data?: any) => void,
+  ) {
+    try {
+      if (body.message) {
+        this.recastSdk.connect.handleMessage({ body }, response, this.onMessage.bind(this));
+        callback(null, { result: 'Bot answered :)' });
+      } else if (body.text) {
+        const res: recastai.Conversation = await this.recastSdk.request.converseText(body.text, {
+          conversationToken: this.config.requestToken,
+        });
+        if (res && res.reply()) {
+          callback(null, {
+            reply: res.reply(),
+            conversationToken: res.conversationToken,
+          });
+        } else {
+          callback(null, {
+            reply: 'No reply :(',
+            conversationToken: res.conversationToken,
+          });
+        }
+      } else {
+        callback('No text provided');
+      }
+    } catch (err) {
+      callback(err);
+    }
   }
 
   private onMessage(message: recastai.Message): Promise<any> {
