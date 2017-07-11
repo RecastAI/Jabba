@@ -43,10 +43,10 @@ export type ChatbotMiddlewareNext = () => Promise<void>;
 export type ChatbotMiddleware = (ctx: IChatbotContext, next?: ChatbotMiddlewareNext) => Promise<any>;
 
 export default class Chatbot {
-  private config: IChatbotConfig;
-  private recastSdk: IRecastSdk;
-  private httpServer: express.Express;
-  private middlewarePipeline: ChatbotMiddleware[];
+  config: IChatbotConfig;
+  recastSdk: IRecastSdk;
+  httpServer: express.Express;
+  middlewarePipeline: ChatbotMiddleware[];
 
   constructor(config: IChatbotConfig) {
     this.config = config;
