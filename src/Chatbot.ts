@@ -35,7 +35,7 @@ export interface IChatbotContext {
   recastSdk: IRecastSdk;
   config: IChatbotConfig;
   message: recastai.Message;
-  conversation?: any;
+  conversation?: recastai.Conversation;
   session?: Session;
 }
 

@@ -6,6 +6,9 @@ export const answerFloatingFromCsv = async (path: string): Promise<ChatbotMiddle
   const wording: string[][] = await loadCsvFile(path);
 
   return async (ctx: IChatbotContext, next: ChatbotMiddlewareNext): Promise<any> => {
+    if (!ctx.conversation) {
+      return next();
+    }
     const intent = ctx.conversation.intents[0];
     if (!intent) {
       return next();
