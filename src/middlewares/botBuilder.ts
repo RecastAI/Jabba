@@ -6,6 +6,6 @@ export const converseApiCall = (): ChatbotMiddleware => {
       conversationToken: ctx.message.senderId,
       language: ctx.config.language,
     });
-    next();
+    return next();
   };
 };
