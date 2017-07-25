@@ -77,9 +77,13 @@ export default class Chatbot {
     }
   }
 
-  public listen(port: number): Chatbot {
-    this.httpServer.listen(port);
-    return this;
+  public listen(port: number): Promise<null> {
+    return new Promise((resolve, reject) => {
+      this.httpServer.listen(port, (err: any) => {
+        if (err) { return reject(err) }
+        resolve()
+      });
+    })
   }
 
   public use(middleware: ChatbotMiddleware): Chatbot {
