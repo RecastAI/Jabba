@@ -102,6 +102,7 @@ export default class Chatbot {
 
     return mongoose.connect(
       `mongodb://${auth}${config.hostname}:${config.port}/${config.database}?ssl=${config.ssl}`,
+      { useMongoClient: true },
     );
   }
 
