@@ -77,7 +77,7 @@ export default class Chatbot {
     }
   }
 
-  public listen(port: number): Promise<null> {
+  public listen(port: number): Promise<{}> {
     return new Promise((resolve, reject) => {
       this.httpServer.listen(port, (err: any) => {
         if (err) { return reject(err) }
