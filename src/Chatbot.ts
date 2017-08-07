@@ -160,7 +160,9 @@ export default class Chatbot {
       return Session.findOrCreateById(message.conversationId)
         .then((session: Session) => {
           ctx.session = session;
-          return execNextMiddleware();
+          session.messageCount++;
+          return session.save()
+            .then(() => execNextMiddleware());
         });
     }
     return execNextMiddleware();
