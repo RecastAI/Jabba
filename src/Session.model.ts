@@ -126,6 +126,7 @@ export class Session {
 
   public reset(): Promise<Session> {
     this.document.consecutiveNotUnderstand = 0;
+    this.document.messageCount = 0;
     this.document.memory = {};
     return this.save();
   }
