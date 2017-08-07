@@ -54,6 +54,8 @@ sessionSchema.pre('save', (next) => {
 export const SessionModel = mongoose.model('Session', sessionSchema);
 
 export class Session {
+  public _previousNotUnderstand: number;
+
   public static create(conversationId: string): Promise<Session> {
     const instance: ISessionModel = {
       conversationId,
@@ -91,6 +93,7 @@ export class Session {
   private document: ISessionDocument;
 
   constructor(model: ISessionDocument) {
+    this._previousNotUnderstand = 0;
     this.document = model;
   }
 

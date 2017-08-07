@@ -160,6 +160,8 @@ export default class Chatbot {
       return Session.findOrCreateById(message.conversationId)
         .then((session: Session) => {
           ctx.session = session;
+          ctx.session._previousNotUnderstand = ctx.session.consecutiveNotUnderstand;
+          ctx.session.consecutiveNotUnderstand = 0;
           session.messageCount++;
           return session.save()
             .then(() => execNextMiddleware());
