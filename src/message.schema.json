@@ -1,0 +1,112 @@
+{
+  "title": "Message",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "oneOf": [
+      {
+        "type": "object",
+        "required": ["type", "content"],
+        "properties": {
+          "type": { "const": "text" },
+          "content": { "type": "string" }
+        }
+      },
+      {
+        "type": "object",
+        "required": ["type", "content"],
+        "properties": {
+          "type": { "type": "string", "enum": ["picture", "video"] },
+          "content": { "type": "string", "format": "uri" }
+        }
+      },
+      {
+        "type": "object",
+        "required": ["type", "content"],
+        "properties": {
+          "type": { "const": "quickReplies" },
+          "content": {
+            "type": "object",
+            "required": ["title", "buttons"],
+            "properties": {
+              "title": { "type": "string" },
+              "buttons": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["title", "value"],
+                  "properties": {
+                    "title": { "type": "string" },
+                    "value": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "object",
+        "required": ["type", "content"],
+        "properties": {
+          "type": { "const": "card" },
+          "content": {
+            "type": "object",
+            "required": ["title", "buttons"],
+            "properties": {
+              "title": { "type": "string" },
+              "subtitle": { "type": "string" },
+              "imageUrl": { "type": "string", "format": "uri" },
+              "buttons": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["title", "type", "value"],
+                  "properties": {
+                    "title": { "type": "string" },
+                    "type": { "type": "string" },
+                    "value": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "object",
+        "required": ["type", "content"],
+        "properties": {
+          "type": { "const": "carousel" },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["title", "imageUrl", "buttons"],
+              "properties": {
+                "title": { "type": "string" },
+                "imageUrl": { "type": "string", "format": "uri" },
+                "buttons": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": ["title", "type", "value"],
+                    "properties": {
+                      "title": { "type": "string" },
+                      "type": { "type": "string" },
+                      "value": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

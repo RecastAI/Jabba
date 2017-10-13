@@ -11,10 +11,4 @@ import * as middlewares from './middlewares';
 import { Session } from './Session.model';
 import Wording from './Wording';
 
-export {
-  Chatbot,
-  middlewares,
-  formats,
-  Session,
-  Wording,
-};
+export { Chatbot, middlewares, formats, Session, Wording };

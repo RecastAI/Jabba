@@ -6,10 +6,6 @@ export {
   Carousselle,
 } from './Carousselle';
 
-export {
-  IQuickRepliesJson,
-  IQuickRepliesButtonJson,
-  QuickReplies,
-} from './QuickReplies';
+export { IQuickRepliesJson, IQuickRepliesButtonJson, QuickReplies } from './QuickReplies';
 
 export { IBotConnectorFormat } from './BotConnectorFormat';

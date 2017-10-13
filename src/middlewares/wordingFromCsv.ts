@@ -24,7 +24,10 @@ export const answerFloatingFromCsv = async (path: string): Promise<ChatbotMiddle
   };
 };
 
-const loadCsvFile = (path: string, opts?: { delimiter?: string }): Promise<string[][]> => {
+const loadCsvFile = (
+  path: string,
+  opts?: { delimiter?: string }
+): Promise<string[][]> => {
   return new Promise((resolve, reject) => {
     fs.readFile(path, 'utf-8', (err: NodeJS.ErrnoException, data: string) => {
       if (err) {
@@ -32,11 +35,18 @@ const loadCsvFile = (path: string, opts?: { delimiter?: string }): Promise<strin
       }
 
       const delimiter: string = opts && opts.delimiter ? opts.delimiter[0] : ';';
-      const nonEscapedDelimiter: RegExp = new RegExp(`(?:"(?:\\.|[^"])*"|\\.|[^${delimiter}])+`, 'g');
+      const nonEscapedDelimiter: RegExp = new RegExp(
+        `(?:"(?:\\.|[^"])*"|\\.|[^${delimiter}])+`,
+        'g'
+      );
 
-      const lines: string[][] = data.toString().split(/\n|\r/g)
+      const lines: string[][] = data
+        .toString()
+        .split(/\n|\r/g)
         .filter((line: string) => line.length > 0)
-        .map((line: string) => (line.replace(/^"|"$/g, '').match(nonEscapedDelimiter) || []));
+        .map(
+          (line: string) => line.replace(/^"|"$/g, '').match(nonEscapedDelimiter) || []
+        );
 
       resolve(lines);
     });

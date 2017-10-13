@@ -40,7 +40,10 @@ export interface IChatbotContext {
 }
 
 export type ChatbotMiddlewareNext = () => Promise<void>;
-export type ChatbotMiddleware = (ctx: IChatbotContext, next?: ChatbotMiddlewareNext) => Promise<any>;
+export type ChatbotMiddleware = (
+  ctx: IChatbotContext,
+  next?: ChatbotMiddlewareNext
+) => Promise<any>;
 
 export default class Chatbot {
   config: IChatbotConfig;
@@ -67,7 +70,9 @@ export default class Chatbot {
 
     this.httpServer = express();
     this.httpServer.use(bodyParser.json());
-    this.httpServer.post('/', (req, res) => this.recastSdk.connect.handleMessage(req, res, this.onMessage.bind(this)));
+    this.httpServer.post('/', (req, res) =>
+      this.recastSdk.connect.handleMessage(req, res, this.onMessage.bind(this))
+    );
 
     // typescripts import are read-only by default
     (mongoose as any).Promise = global.Promise;
@@ -80,17 +85,18 @@ export default class Chatbot {
   public listen(port: number): Promise<{}> {
     return new Promise((resolve, reject) => {
       this.httpServer.listen(port, (err: any) => {
-        if (err) { return reject(err) }
-        resolve()
+        if (err) {
+          return reject(err);
+        }
+        resolve();
       });
-    })
+    });
   }
 
   public use(middleware: ChatbotMiddleware): Chatbot {
     this.middlewarePipeline.push(middleware);
     return this;
   }
-
 
   public connectToMongo(config: IMongoConfig): mongoose.MongooseThenable {
     this.config.mongo = config;
@@ -102,7 +108,7 @@ export default class Chatbot {
 
     return mongoose.connect(
       `mongodb://${auth}${config.hostname}:${config.port}/${config.database}?ssl=${config.ssl}`,
-      { useMongoClient: true },
+      { useMongoClient: true }
     );
   }
 
@@ -111,18 +117,25 @@ export default class Chatbot {
   }
 
   public async botHostingEntrypoint(
-    body: { message: string, text: string },
+    body: { message: string; text: string },
     response: object,
-    callback: (err: any, data?: any) => void,
+    callback: (err: any, data?: any) => void
   ) {
     try {
       if (body.message) {
-        this.recastSdk.connect.handleMessage({ body }, response, this.onMessage.bind(this));
+        this.recastSdk.connect.handleMessage(
+          { body },
+          response,
+          this.onMessage.bind(this)
+        );
         callback(null, { result: 'Bot answered :)' });
       } else if (body.text) {
-        const res: recastai.Conversation = await this.recastSdk.request.converseText(body.text, {
-          conversationToken: this.config.requestToken,
-        });
+        const res: recastai.Conversation = await this.recastSdk.request.converseText(
+          body.text,
+          {
+            conversationToken: this.config.requestToken,
+          }
+        );
         if (res && res.reply()) {
           callback(null, {
             reply: res.reply(),
@@ -143,7 +156,11 @@ export default class Chatbot {
   }
 
   private onMessage(message: recastai.Message): Promise<any> {
-    const ctx: IChatbotContext = { message, recastSdk: this.recastSdk, config: this.config };
+    const ctx: IChatbotContext = {
+      message,
+      recastSdk: this.recastSdk,
+      config: this.config,
+    };
     let currentMiddlewareIndex: number = 0;
 
     const execNextMiddleware = (): Promise<any> => {
@@ -157,17 +174,14 @@ export default class Chatbot {
     };
 
     if (this.isMongoEnabled() === true) {
-      return Session.findOrCreateById(message.conversationId)
-        .then((session: Session) => {
-          ctx.session = session;
-          ctx.session._previousNotUnderstand = ctx.session.consecutiveNotUnderstand;
-          ctx.session.consecutiveNotUnderstand = 0;
-          session.messageCount++;
-          return session.save()
-            .then(() => execNextMiddleware());
-        });
+      return Session.findOrCreateById(message.conversationId).then((session: Session) => {
+        ctx.session = session;
+        ctx.session._previousNotUnderstand = ctx.session.consecutiveNotUnderstand;
+        ctx.session.consecutiveNotUnderstand = 0;
+        session.messageCount++;
+        return session.save().then(() => execNextMiddleware());
+      });
     }
     return execNextMiddleware();
   }
-
 }

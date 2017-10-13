@@ -34,7 +34,6 @@ export class QuickReplies {
     });
 
     return this;
-
   }
 
   public toJson(): IQuickRepliesJson {

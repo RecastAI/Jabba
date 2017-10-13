@@ -9,7 +9,7 @@ export interface ISessionModel {
   messageCount: number;
 }
 
-export interface ISessionDocument extends ISessionModel, mongoose.Document { }
+export interface ISessionDocument extends ISessionModel, mongoose.Document {}
 
 const sessionSchema = new mongoose.Schema({
   conversationId: {
@@ -36,12 +36,12 @@ const sessionSchema = new mongoose.Schema({
   messageCount: {
     type: Number,
     default: 0,
-  }
+  },
 });
 
-sessionSchema.pre('save', (next) => {
+sessionSchema.pre('save', next => {
   if (this._doc) {
-    const doc = (this._doc as ISessionModel);
+    const doc = this._doc as ISessionModel;
     const now = new Date();
     if (!doc.createdAt) {
       doc.createdAt = now;
@@ -66,28 +66,27 @@ export class Session {
       memory: {},
     };
 
-    return SessionModel.create(instance)
-      .then((res: mongoose.Document) => new Session(res as ISessionDocument));
+    return SessionModel.create(instance).then(
+      (res: mongoose.Document) => new Session(res as ISessionDocument)
+    );
   }
 
   public static findById(conversationId: string): Promise<Session> {
-    return SessionModel.findOne({ conversationId })
-      .then((res: mongoose.Document) => {
-        if (!res) {
-          return Promise.reject(`Sersation with id ${conversationId} not found.`);
-        }
-        return Promise.resolve(new Session(res as ISessionDocument));
-      });
+    return SessionModel.findOne({ conversationId }).then((res: mongoose.Document) => {
+      if (!res) {
+        return Promise.reject(`Sersation with id ${conversationId} not found.`);
+      }
+      return Promise.resolve(new Session(res as ISessionDocument));
+    });
   }
 
   public static findOrCreateById(conversationId: string): Promise<Session> {
-    return SessionModel.findOne({ conversationId })
-      .then((res: mongoose.Document) => {
-        if (!res) {
-          return this.create(conversationId);
-        }
-        return Promise.resolve(new Session(res as ISessionDocument));
-      });
+    return SessionModel.findOne({ conversationId }).then((res: mongoose.Document) => {
+      if (!res) {
+        return this.create(conversationId);
+      }
+      return Promise.resolve(new Session(res as ISessionDocument));
+    });
   }
 
   private document: ISessionDocument;
@@ -123,8 +122,7 @@ export class Session {
 
   public save(): Promise<Session> {
     this.document.markModified('memory');
-    return this.document.save()
-      .then(() => this);
+    return this.document.save().then(() => this);
   }
 
   public reset(): Promise<Session> {
