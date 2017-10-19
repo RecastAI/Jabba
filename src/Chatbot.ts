@@ -22,6 +22,7 @@ export interface IMongoConfig {
   username?: string;
   password?: string;
   ssl?: boolean;
+  replicaSetName?: string;
   port?: string;
   enabled?: boolean;
 }
@@ -106,8 +107,13 @@ export default class Chatbot {
       auth = `${config.username}:${config.password}@`;
     }
 
+    let connectionString = `mongodb://${auth}${config.hostname}:${config.port}/${config.database}?ssl=${config.ssl}`;
+    if (config.replicaSetName) {
+      connectionString += `&replicaSet=${config.replicaSetName}`
+    }
+
     return mongoose.connect(
-      `mongodb://${auth}${config.hostname}:${config.port}/${config.database}?ssl=${config.ssl}`,
+      connectionString,
       { useMongoClient: true }
     );
   }

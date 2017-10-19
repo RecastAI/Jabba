@@ -24,6 +24,6 @@
     "express": "^4.15.2",
     "lodash": "^4.17.4",
     "mongoose": "^4.11.4",
-    "recastai": "^3.4.1"
+    "recastai": "3.5.0"
   }
 }
