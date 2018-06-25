@@ -39,6 +39,8 @@ const sessionSchema = new mongoose.Schema({
   },
 });
 
+sessionSchema.index({ conversationId: 1 });
+
 sessionSchema.pre('save', next => {
   if (this._doc) {
     const doc = this._doc as ISessionModel;
